@@ -13,7 +13,7 @@ Background information
 
 Check this blog post on how and **why** I came up with the idea of using WebDAV PROPFIND only requests as a C2 channel:
 
-[TBD](https://tbd)
+[Wordpress:Using WebDAV features as a covert channel](https://arno0x0x.wordpress.com/2017/09/07/using-webdav-features-as-a-covert-channel/)
 
 Architecture
 ----------------
