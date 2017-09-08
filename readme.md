@@ -1,6 +1,6 @@
 WebDAVC2
 ============
-LAST/CURRENT VERSION: 0.1
+LAST/CURRENT VERSION: 0.2
 
 Author: Arno0x0x - [@Arno0x0x](https://twitter.com/Arno0x0x)
 
@@ -29,6 +29,7 @@ Features
 WebDavC2 main features:
   - Various stager (*powershell one liner, batch file, two types of MS-Office macro*) - this is not limited, you can easily come up with your own stagers, check the templates folder to get an idea
   - Pseudo-interactive shell (*with environment persistency*)
+  - Auto start of the WebClient service, even from an unprivileged user using the 'pushd' trick
 
 <img src="https://dl.dropboxusercontent.com/s/swucv9ixr7baumb/webdav_03.png?dl=0" width="600">
 
@@ -67,9 +68,9 @@ TODO
 
 This tool is just a PoC so don't expect production quality, plus it has some arbitrary limitations in terms of quantity of data that can be transfered from the agent back to the controller.
 
-To be added in the next releases:
-- Check if the WebClient service is started, if not start it with the `pushd \\webdavserver & popd` trick.
+To be added:
+- more stagers ?
 
 To be fixed:
 - Increase the (*arbitrary*) size limit of command output that can be returned to the controller
-- waiting for feedback :)
+- I'm waiting for feedback :)

