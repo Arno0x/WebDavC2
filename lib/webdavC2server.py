@@ -219,13 +219,13 @@ class WebDavC2Server(Thread):
 				body += "<D:href>/{}</D:href>\r\n".format(chunk)
 				body += "<D:propstat>\r\n"
 				body += "<D:prop>\r\n"
-				body += "<D:creationdate>{}</D:creationdate>\r\n".format(helpers.webdavdate(now.replace(minute=i)))
+				body += "<D:creationdate>{}</D:creationdate>\r\n".format(helpers.webdavdate(now.replace(minute=(i%59))))
 				body += "<D:displayname>{}</D:displayname>\r\n".format(chunk)
 				body += "<D:getcontentlanguage/>\r\n"
 				body += "<D:getcontentlength>0</D:getcontentlength>\r\n"
 				body += "<D:getcontenttype/>\r\n"
 				body += "<D:getetag/>\r\n"
-				body += "<D:getlastmodified>{}</D:getlastmodified>\r\n".format(helpers.httpdate(now.replace(minute=i)))
+				body += "<D:getlastmodified>{}</D:getlastmodified>\r\n".format(helpers.httpdate(now.replace(minute=(i%59))))
 				body += "<D:lockdiscovery/>\r\n"
 				body += "<D:resourcetype/>\r\n"
 				body += "<D:source/>\r\n"
