@@ -21,7 +21,7 @@ from lib.stagers import GenStager
 from lib.webdavC2server import WebDavC2Server
 
 # make version and author for WebDavC2
-VERSION = "0.1"
+VERSION = "0.2"
 AUTHOR = "Arno0x0x - https://twitter.com/Arno0x0x"
 
 #****************************************************************************************

