@@ -1,6 +1,6 @@
 WebDAVC2
 ============
-LAST/CURRENT VERSION: 0.2
+LAST/CURRENT VERSION: 0.3
 
 Author: Arno0x0x - [@Arno0x0x](https://twitter.com/Arno0x0x)
 
@@ -27,7 +27,7 @@ Features
 ----------------
 
 WebDavC2 main features:
-  - Various stager (*powershell one liner, batch file, two types of MS-Office macro*) - this is not limited, you can easily come up with your own stagers, check the templates folder to get an idea
+  - Various stager (*powershell one liner, batch file, different types of MS-Office macro, JScript file*) - this is not limited, you can easily come up with your own stagers, check the templates folder to get an idea
   - Pseudo-interactive shell (*with environment persistency*)
   - Auto start of the WebClient service, even from an unprivileged user using the 'pushd' trick
 
