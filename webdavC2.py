@@ -39,6 +39,8 @@ if __name__ == '__main__':
 	GenStager.batch({'serverName': serverName})
 	GenStager.macro({'serverName': serverName})
 	GenStager.macro2({'serverName': serverName})
+	GenStager.macro3({'serverName': serverName})
+	GenStager.jscript({'serverName': serverName})
 
 	# Create a Queue for communication between threads
 	queue = Queue.Queue(0)

